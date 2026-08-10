@@ -1,0 +1,555 @@
+/* ============================================================
+   学期倒数 · styles.css
+   原型 B「学期旅程」· 移动优先 · 纯静态 · 零依赖
+   ============================================================ */
+
+/* ---------- 主题变量 ---------- */
+:root {
+  /* 樱花粉底：线性渐变打底，光晕与波点由 body 叠加 */
+  --bg-grad: linear-gradient(180deg, #fff3f8 0%, #ffd9e9 45%, #ffc4da 100%);
+  --card: #ffffff;
+  --ink: #3a2431;
+  --muted: #9a6f80;
+  --line: #f3dce6;
+  --shadow: 0 10px 30px rgba(230, 83, 143, 0.16);
+  --radius: 18px;
+
+  /* 默认 accent（樱花粉），按 body[data-phase] 覆盖 */
+  --accent: #e6538f;
+  --accent-soft: #ffe0ec;
+  --accent-ink: #c23a72;
+
+  /* 数字渐变文字的上/下色 */
+  --num-a: #ff9dc0;
+  --num-b: #e6538f;
+}
+
+/* 状态主题：假期/未开学 = 冷青；学期中 = 暖橙；过期 = 红 */
+body[data-phase='before'],
+body[data-phase='holiday'] {
+  --accent: #e6538f;
+  --accent-soft: #ffe0ec;
+  --accent-ink: #c23a72;
+  --num-a: #ff9dc0;
+  --num-b: #e6538f;
+}
+body[data-phase='semester'] {
+  --accent: #e8590c;
+  --accent-soft: #fbe3d3;
+  --accent-ink: #b93a06;
+  --num-a: #ffb43c;
+  --num-b: #e8590c;
+}
+body[data-phase='expired'] {
+  --accent: #c92a2a;
+  --accent-soft: #f9e2e2;
+  --accent-ink: #a51e1e;
+  --num-a: #ff8080;
+  --num-b: #c92a2a;
+}
+
+/* ---------- 基础 ---------- */
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background-color: #fff0f5;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, .45) 1.5px, transparent 1.5px),
+    radial-gradient(560px 420px at 88% -6%, rgba(255, 130, 175, .55), transparent 62%),
+    radial-gradient(520px 400px at -8% 106%, rgba(190, 165, 255, .42), transparent 62%),
+    var(--bg-grad);
+  background-size: 26px 26px, auto, auto, auto;
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans SC", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  display: flex;
+  justify-content: center;
+  transition: color .4s ease;
+}
+
+/* ---------- 樱花花瓣（纯装饰，fixed 悬浮） ---------- */
+.petals {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 3;
+}
+.petal {
+  position: absolute;
+  top: -24px;
+  background: linear-gradient(135deg, #ffd9e6, #ff9fc0);
+  border-radius: 70% 30% 65% 35% / 60% 60% 40% 40%;
+  opacity: 0;
+  animation: petal-fall linear infinite;
+}
+.petal::after {
+  content: '';
+  position: absolute;
+  inset: 16% 18%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, .25));
+  opacity: .55;
+}
+.p1 { left: 6%;  width: 14px; height: 12px; animation-duration: 14s; animation-delay: -2s; }
+.p2 { left: 21%; width: 10px; height: 9px;  animation-duration: 17s; animation-delay: -7s; }
+.p3 { left: 36%; width: 16px; height: 13px; animation-duration: 12s; animation-delay: -4s; }
+.p4 { left: 52%; width: 9px;  height: 8px;  animation-duration: 19s; animation-delay: -11s; }
+.p5 { left: 63%; width: 13px; height: 11px; animation-duration: 15s; animation-delay: -9s; }
+.p6 { left: 74%; width: 11px; height: 10px; animation-duration: 13s; animation-delay: -3s; }
+.p7 { left: 86%; width: 15px; height: 12px; animation-duration: 18s; animation-delay: -6s; }
+.p8 { left: 45%; width: 8px;  height: 7px;  animation-duration: 16s; animation-delay: -12s; }
+/* 第二组：更稀的轨迹 + 反向摆动 */
+.p9  { left: 12%; width: 18px; height: 15px; animation-duration: 11s; animation-delay: -1s;  animation-name: petal-fall2; }
+.p10 { left: 30%; width: 7px;  height: 6px;  animation-duration: 21s; animation-delay: -14s; animation-name: petal-fall2; }
+.p11 { left: 44%; width: 12px; height: 10px; animation-duration: 14s; animation-delay: -8s;  animation-name: petal-fall2; }
+.p12 { left: 58%; width: 17px; height: 14px; animation-duration: 12s; animation-delay: -5s;  animation-name: petal-fall2; }
+.p13 { left: 69%; width: 9px;  height: 8px;  animation-duration: 20s; animation-delay: -16s; animation-name: petal-fall2; }
+.p14 { left: 80%; width: 14px; height: 12px; animation-duration: 15s; animation-delay: -10s; animation-name: petal-fall2; }
+.p15 { left: 91%; width: 10px; height: 8px;  animation-duration: 18s; animation-delay: -13s; animation-name: petal-fall2; }
+.p16 { left: 24%; width: 13px; height: 11px; animation-duration: 13s; animation-delay: -2s;  animation-name: petal-fall2; }
+
+@keyframes petal-fall {
+  0%   { transform: translateY(-24px) translateX(0) rotate(0deg); opacity: 0; }
+  8%   { opacity: .65; }
+  50%  { transform: translateY(46vh) translateX(20px) rotate(150deg); }
+  100% { transform: translateY(104vh) translateX(-16px) rotate(320deg); opacity: .45; }
+}
+/* 变体：往左飘、旋转方向相反，增加层次感 */
+@keyframes petal-fall2 {
+  0%   { transform: translateY(-24px) translateX(0) rotate(0deg); opacity: 0; }
+  8%   { opacity: .7; }
+  50%  { transform: translateY(48vh) translateX(-24px) rotate(-160deg); }
+  100% { transform: translateY(104vh) translateX(20px) rotate(-330deg); opacity: .5; }
+}
+
+.app {
+  width: 100%;
+  max-width: 480px;
+  padding: 44px 20px calc(36px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ---------- 品牌栏 ---------- */
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 4px;
+}
+.brand-mark {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+.brand-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---------- 主视觉卡片 ---------- */
+.hero {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 30px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* ---------- 学期轴 ---------- */
+.timeline {
+  width: 100%;
+  padding: 0 16px;
+}
+.timeline-canvas {
+  position: relative;
+  height: 42px;
+}
+.tl-line {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--line);
+}
+.tl-fill {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  height: 3px;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+  transition: width .6s ease;
+}
+.tl-node {
+  position: absolute;
+  top: 32px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+.tl-node-start {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.tl-node-end,
+.tl-node-next {
+  background: var(--card);
+  border: 3px solid var(--muted);
+}
+
+/* 「今天」标记：倒三角 + 竖线，悬浮于轴上方 */
+.tl-today {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+  transition: left .6s ease;
+}
+.tl-today .tri {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--accent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+.tl-today .stem {
+  width: 2px;
+  height: 24px;
+  background: var(--accent);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+/* 轴下日期标签 */
+.tl-labels {
+  position: relative;
+  height: 18px;
+  margin-top: 6px;
+}
+.tl-labels span {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.tl-labels span.today {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ---------- 状态行 ---------- */
+.phase-line {
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  transition: color .4s ease, background-color .4s ease;
+}
+
+/* ---------- 大字倒计时 ---------- */
+.countdown {
+  text-align: center;
+}
+.countdown-label {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: var(--muted);
+}
+.countdown-number {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  font-size: clamp(64px, 22vw, 96px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  transition: color .4s ease;
+}
+/* 数字渐变文字（含 -webkit- 前缀兼容 Safari/Chrome） */
+.countdown-num {
+  color: var(--accent); /* 降级兜底：不支持 background-clip:text 时用纯色 */
+  background-image: linear-gradient(180deg, var(--num-a), var(--num-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.countdown-unit {
+  font-size: .32em;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+.countdown-target {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+/* 「今天」日期小字 */
+.today-date {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.today-date::before {
+  content: '📅 ';
+}
+
+/* ---------- 校历过期卡片 ---------- */
+.expired-card {
+  text-align: center;
+  padding: 10px 0 4px;
+}
+.ec-icon { font-size: 34px; line-height: 1; }
+.expired-card h3 { margin: 10px 0 6px; font-size: 18px; }
+.expired-card p {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ---------- 日期节点卡 ---------- */
+.dates {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.date-card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 14px 8px;
+  text-align: center;
+  transition: box-shadow .3s ease;
+}
+.date-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.date-value {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.date-card.is-today {
+  box-shadow: 0 0 0 2px var(--accent), var(--shadow);
+}
+.date-card.is-today .date-value {
+  color: var(--accent);
+}
+
+/* ---------- 重设入口 ---------- */
+.reset-btn {
+  align-self: center;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color .2s ease, background-color .2s ease;
+}
+.reset-btn:hover {
+  color: var(--ink);
+  background: rgba(0, 0, 0, .05);
+}
+
+.privacy-note {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  opacity: .85;
+}
+
+/* ---------- 弹窗 ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(20, 18, 14, .45);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: fadeIn .2s ease;
+}
+.modal-backdrop[hidden] { display: none; }
+
+.modal {
+  width: 100%;
+  max-width: 360px;
+  background: var(--card);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .2);
+  animation: popIn .25s ease;
+}
+.modal h2 {
+  margin: 0 0 18px;
+  font-size: 18px;
+}
+.modal label {
+  display: block;
+  margin-bottom: 14px;
+}
+.modal label > span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.modal input[type='date'] {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fafaf7;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ink);
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.modal input[type='date']:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #fff;
+}
+.modal input[type='date'].invalid {
+  border-color: #e03131;
+  background: #fdf0f0;
+}
+
+.form-error {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #c92a2a;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-ghost {
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease;
+}
+.btn-ghost:hover { color: var(--ink); }
+
+.btn-primary {
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .14);
+  transition: background-color .4s ease, transform .15s ease;
+}
+.btn-primary:hover { transform: translateY(-1px); }
+
+:where(button, input, a):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(28px + env(safe-area-inset-bottom));
+  z-index: 60;
+  transform: translateX(-50%) translateY(12px);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ---------- 动画 ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(8px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- 动效偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .tl-today .tri { animation: none; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- 桌面端微调 ---------- */
+@media (min-width: 520px) {
+  .app { padding-top: 64px; }
+}

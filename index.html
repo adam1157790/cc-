@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>学期倒数 · 校历旅程</title>
+  <meta name="description" content="打开就看：距学期结束、距放假、距开学还有几天。在校生活的日常陪伴。">
+  <meta name="theme-color" content="#FFE3EE">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-phase="before">
+
+<!-- 飘落的樱花花瓣（纯装饰） -->
+<div class="petals" aria-hidden="true">
+  <span class="petal p1"></span>
+  <span class="petal p2"></span>
+  <span class="petal p3"></span>
+  <span class="petal p4"></span>
+  <span class="petal p5"></span>
+  <span class="petal p6"></span>
+  <span class="petal p7"></span>
+  <span class="petal p8"></span>
+  <span class="petal p9"></span>
+  <span class="petal p10"></span>
+  <span class="petal p11"></span>
+  <span class="petal p12"></span>
+  <span class="petal p13"></span>
+  <span class="petal p14"></span>
+  <span class="petal p15"></span>
+  <span class="petal p16"></span>
+</div>
+
+<main class="app">
+
+  <!-- 品牌栏 -->
+  <header class="brand">
+    <span class="brand-mark">🌸 学期倒数</span>
+    <span class="brand-sub">· 校历旅程</span>
+  </header>
+
+  <!-- 主视觉区 -->
+  <section class="hero" aria-live="polite">
+
+    <!-- 学期轴（Hero） -->
+    <div class="timeline" aria-hidden="true">
+      <div class="timeline-canvas">
+        <div class="tl-line"></div>
+        <div class="tl-fill" id="tlFill"></div>
+        <span class="tl-node tl-node-start" id="tlNodeStart"></span>
+        <span class="tl-node tl-node-end" id="tlNodeEnd"></span>
+        <span class="tl-node tl-node-next" id="tlNodeNext"></span>
+        <div class="tl-today" id="tlToday">
+          <span class="tri"></span>
+          <span class="stem"></span>
+        </div>
+      </div>
+      <div class="tl-labels">
+        <span id="tlLabelStart">9.07</span>
+        <span id="tlLabelEnd">1.15</span>
+        <span id="tlLabelNext">2.22</span>
+        <span class="today" id="tlLabelToday">今天</span>
+      </div>
+    </div>
+
+    <!-- 状态行 -->
+    <p class="phase-line" id="phaseLine">▸ 假期 · 新学期倒计时</p>
+
+    <!-- 大字倒计时 -->
+    <div class="countdown" id="countdownBlock">
+      <p class="countdown-label" id="countdownLabel">距本学期开学</p>
+      <p class="countdown-number">
+        <span class="countdown-num" id="daysNum">32</span>
+        <span class="countdown-unit">天</span>
+      </p>
+      <p class="countdown-target" id="countdownTarget">目标日 2026.09.07</p>
+      <p class="today-date" id="todayDate">今天</p>
+    </div>
+
+    <!-- 校历过期卡片 -->
+    <div class="expired-card" id="expiredCard" hidden>
+      <div class="ec-icon">🗓️</div>
+      <h3>本学期已结束</h3>
+      <p>新学期已经开始，请更新你的校历，继续新的旅程。</p>
+      <button type="button" class="btn-primary" id="expiredUpdateBtn">更新校历</button>
+    </div>
+
+  </section>
+
+  <!-- 日期节点卡 -->
+  <section class="dates">
+    <div class="date-card" id="cardStart">
+      <span class="date-label">🎒 开学日</span>
+      <span class="date-value" id="dateStartVal">9.07</span>
+    </div>
+    <div class="date-card" id="cardEnd">
+      <span class="date-label">🎉 放假日</span>
+      <span class="date-value" id="dateEndVal">1.15</span>
+    </div>
+    <div class="date-card" id="cardNext">
+      <span class="date-label">📚 下学期开学</span>
+      <span class="date-value" id="dateNextVal">2.22</span>
+    </div>
+  </section>
+
+  <button type="button" class="reset-btn" id="resetBtn">重新设置学期日期</button>
+  <p class="privacy-note">数据仅存本机 · 无需注册</p>
+
+</main>
+
+<!-- 设置学期日期弹窗 -->
+<div class="modal-backdrop" id="settingsModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle">设置学期日期</h2>
+    <form id="settingsForm" novalidate>
+      <label>
+        <span>本学期开始</span>
+        <input type="date" name="semesterStart" required autocomplete="off">
+      </label>
+      <label>
+        <span>本学期结束</span>
+        <input type="date" name="semesterEnd" required autocomplete="off">
+      </label>
+      <label>
+        <span>下学期开学</span>
+        <input type="date" name="nextSemesterStart" required autocomplete="off">
+      </label>
+      <p class="form-error" id="formError" hidden></p>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="cancelBtn">取消</button>
+        <button type="submit" class="btn-primary">保存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toast 轻提示 -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
