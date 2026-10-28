@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>连通测试</title></head>
+<body style="font-family:sans-serif;text-align:center;padding-top:100px">
+<h1>✅ 网络连通正常！</h1>
+<p>如果你能看到这个页面，说明网络没问题。</p>
+<p><a href="/">点这里进入文生视频平台（首次加载约10-30秒）</a></p>
+<p id="t"></p>
+<script>
+fetch('/api/health').then(r=>r.json()).then(d=>{
+  document.getElementById('t').textContent='API也正常: '+JSON.stringify(d);
+}).catch(e=>{
+  document.getElementById('t').textContent='API异常: '+e;
+});
+</script>
+</body></html>

@@ -1,0 +1,19 @@
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+backend/.env
+backend/server.log
+backend/data/
+backend/sb_test.json
+backend/token.txt
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# 临时
+frontend.log
+*.log
+share_qr.png
+网络自检.html
