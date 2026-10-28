@@ -1,13 +1,13 @@
 // 统一 API 客户端：自动附带 JWT，401 时跳登录
-// 未显式配置时：本机用 localhost；局域网 IP 直连同主机 8000；
-// cloudflared 隧道（*.trycloudflare.com）同域名走 /api；
-// cpolar 隧道用两条隧道：前端域名替换主机后缀得到 API 域名（见 apiHost()）
+// 地址优先级：环境变量 VITE_API_BASE（Vercel 部署时设为后端隧道地址）> 本地/局域网/隧道自适应
 const BASE =
   import.meta.env.VITE_API_BASE ??
   (location.hostname === "localhost" || location.hostname === "127.0.0.1"
     ? "http://localhost:8000"
-    : location.hostname.endsWith(".trycloudflare.com")
-      ? "" // 同源，cloudflared 把 /api 转发到本机 8000
+    : location.hostname.endsWith(".trycloudflare.com") ||
+        location.hostname.endsWith(".cpolar.top") ||
+        location.hostname.endsWith(".vercel.app")
+      ? "" // 同源：隧道由 vite preview 代理 /api；Vercel 由 vercel.json 的 proxy 配置转发
       : `http://${location.hostname}:8000`);
 
 /** cpolar 免费版两条隧道（前端+API）主机号不同：从本地存储取 API 隧道地址，否则回退 BASE */
